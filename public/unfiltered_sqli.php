@@ -1,0 +1,61 @@
+<?php
+session_start();
+include '../templates/header.php';
+include '../includes/db.php';
+
+// Ensure the session token is set
+if (!isset($_SESSION['token'])) {
+    $_SESSION['token'] = bin2hex(random_bytes(32));
+}
+?>
+
+<div class="centered">
+    <h1>Unfiltered SQL-injection and login bypass</h1>
+    <div class="objective-box">
+        <p>Password? What password? Maybe i don't need a password?</p>
+    </div>
+    <form method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+        <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+        <button class="real-button" type="submit">Login</button>
+    </form>
+    <?php if (isset($error)) { echo "<p class='error'>$error</p>"; } ?>
+</div>
+
+<?php
+// Simulate a vulnerable login form
+if (isset($_POST['username']) && isset($_POST['password'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Vulnerable SQL query
+    $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+    
+    // Debug output
+    echo "<!-- Debug: " . htmlspecialchars($query) . " -->";
+    
+    try {
+        $result = $conn->query($query);
+        
+        // Check if the query returns any rows
+        if ($result && $result->num_rows > 0) {
+            // Include the token in the form submission
+            echo '<form method="post" action="index.php?challenge=sqli">';
+            echo '<input type="hidden" name="token" value="' . $_SESSION['token'] . '">';
+            echo '<input type="hidden" name="complete" value="unfiltered_sqli">';
+            echo '<center><button class="real-button" type="submit">Complete Challenge</button></center>';
+            echo '</form>';
+        } else {
+            $error = "Invalid credentials";
+        }
+    } catch (mysqli_sql_exception $e) {
+        $error = "Login failed"; // Generic error for users
+        error_log("SQL Error: " . $e->getMessage()); // Log actual error
+    }
+}
+include '../templates/footer.php';
+$conn->close();
+?>

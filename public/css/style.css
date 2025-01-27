@@ -1,0 +1,256 @@
+/* Define the custom font */
+@font-face {
+    font-family: 'SDGlitch_Demo';
+    src: url('SDGlitch_Demo.ttf') format('truetype');
+}
+
+body {
+    background-color: black;
+    color: limegreen;
+    font-family: 'SDGlitch_Demo', 'Courier New', Courier, monospace;
+    background-image: 
+    linear-gradient(limegreen 1px, transparent 1px),
+    linear-gradient(90deg, limegreen 1px, transparent 1px);
+    background-size: 90px 90px;
+}
+
+header {
+    text-align: center;
+    margin-top: 50px;
+}
+
+#head-title {
+    font-size: 4em;
+    text-shadow: 0 0 10px limegreen;
+    position: relative;
+    animation: flicker 5s infinite;
+}
+
+#head-title::before, #head-title::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: limegreen;
+    background: black;
+    overflow: hidden;
+    clip: rect(0, 900px, 0, 0);
+    animation: noise 0.2s infinite linear alternate-reverse;
+    opacity: 0.5;
+}
+
+#head-title::after {
+    left: 2px;
+    text-shadow: -6px 0 red;
+    animation: noise 0.3s infinite linear alternate-reverse;
+}
+
+#head-title .underscore {
+    animation: blink 1.5s infinite;
+}
+
+h1 {
+    font-size: 3em;
+    text-shadow: 0 0 10px limegreen;
+}
+
+p {
+    font-size: 1.6em;
+    margin: 20px 0;
+}
+
+/* Button styling */
+button {
+    background-color: black;
+    color: limegreen;
+    font-family: 'SDGlitch_Demo', 'Courier New', Courier, monospace;
+    font-size: 1.1em;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Input field styling */
+input[type="text"], input[type="password"], input[type="submit"] {
+    background-color: black;
+    color: limegreen;
+    border: 2px solid limegreen;
+    margin-top: 4px;
+    padding: 10px;
+    font-size: 1.1em;
+    font-family: 'SDGlitch_Demo', 'Courier New', Courier, monospace;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="submit"]:focus {
+    outline: none;
+    background-color: black;
+    color: limegreen;
+}
+
+label {
+    font-size: 1.5em;
+}
+
+/* Objective box styling */
+.objective-box {
+    border: 2px solid limegreen;
+    text-align: left;
+    padding: 0px 20px;
+    width: 400px;
+    margin: 20px auto;
+    background-color: black;
+    color: limegreen;
+    border-radius: 10px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.objective-box p {
+    font-size: 1.0em;
+}
+
+.real-button {
+    font-size: 1.5em;
+    margin-top: 4px;
+    padding: 8px;
+    border: limegreen 2px solid;
+    border-radius: 10px;
+    text-align: center;
+}
+.real-button:hover {
+    background-color: limegreen;
+    color: black;
+}
+
+.centered {
+    text-align: center;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+.grid-item {
+    background-color: black;
+    border: 2px solid limegreen;
+    padding: 20px;
+    text-align: center;
+    font-size: 1.8em;
+    transition: transform 0.3s ease;
+}
+
+.grid-item:hover {
+    transform: scale(1.05);
+    border: 2px solid rgba(255, 0, 0, 0.5);
+}
+
+.grid-item a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.grid-item img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 10px;
+    border-radius: 15px;
+    opacity: 0.4;
+}
+
+.grid-item h2 {
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+@keyframes flicker {
+    0%, 95%, 100% {
+        opacity: 1;
+    }
+    96% {
+        opacity: 0;
+    }
+}
+
+@keyframes noise {
+    0% {
+        clip: rect(42px, 9999px, 44px, 0);
+    }
+    5% {
+        clip: rect(12px, 9999px, 85px, 0);
+    }
+    10% {
+        clip: rect(85px, 9999px, 12px, 0);
+    }
+    15% {
+        clip: rect(44px, 9999px, 42px, 0);
+    }
+    20% {
+        clip: rect(12px, 9999px, 85px, 0);
+    }
+    25% {
+        clip: rect(85px, 9999px, 12px, 0);
+    }
+    30% {
+        clip: rect(42px, 9999px, 44px, 0);
+    }
+    35% {
+        clip: rect(12px, 9999px, 85px, 0);
+    }
+    40% {
+        clip: rect(85px, 9999px, 12px, 0);
+    }
+    45% {
+        clip: rect(44px, 9999px, 42px, 0);
+    }
+    50% {
+        clip: rect(12px, 9999px, 85px, 0);
+    }
+    55% {
+        clip: rect(85px, 9999px, 12px, 0);
+    }
+    60% {
+        clip: rect(42px, 9999px, 44px, 0);
+    }
+    65% {
+        clip: rect(12px, 9999px, 85px, 0);
+    }
+    70% {
+        clip: rect(85px, 9999px, 12px, 0);
+    }
+    75% {
+        clip: rect(44px, 9999px, 42px, 0);
+    }
+    80% {
+        clip: rect(12px, 9999px, 85px, 0);
+    }
+    85% {
+        clip: rect(85px, 9999px, 12px, 0);
+    }
+    90% {
+        clip: rect(42px, 9999px, 44px, 0);
+    }
+    95% {
+        clip: rect(12px, 9999px, 85px, 0);
+    }
+    100% {
+        clip: rect(85px, 9999px, 12px, 0);
+    }
+}
+
+@keyframes blink {
+    0%, 50%, 100% {
+        opacity: 1;
+    }
+    25%, 75% {
+        opacity: 0;
+    }
+}
