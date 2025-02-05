@@ -15,7 +15,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['2fa_
 
     // Simulate checking credentials and 2FA code
     if ($username === 'admin' && $password === 'password' && $fa_code === '123456') {
-        echo '<form method="post" action="index.php?complete=twofabypass">';
+        echo '<form method="post" action="index.php?challenge=auth">';
         echo '<input type="hidden" name="token" value="' . $_SESSION['token'] . '">';
         echo '<input type="hidden" name="complete" value="twofabypass">';
         echo '<button class="real-button" type="submit">Complete Challenge</button>';

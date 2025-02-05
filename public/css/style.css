@@ -5,6 +5,9 @@
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure full height */
     background-color: black;
     color: limegreen;
     font-family: 'SDGlitch_Demo', 'Courier New', Courier, monospace;
@@ -113,7 +116,7 @@ label {
 
 .real-button {
     font-size: 1.5em;
-    margin-top: 4px;
+    margin: 8px;
     padding: 8px;
     border: limegreen 2px solid;
     border-radius: 10px;
@@ -122,6 +125,14 @@ label {
 .real-button:hover {
     background-color: limegreen;
     color: black;
+}
+
+/* Container layout */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
 }
 
 .centered {
@@ -169,6 +180,50 @@ label {
 .grid-item h2 {
     font-size: 1.5em;
     margin: 10px 0;
+}
+
+/* Product display */
+.products-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.product {
+    width: 30%;
+    padding: 15px;
+    border: 1px solid limegreen;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Cart section */
+.cart {
+    padding: 15px;
+    text-align: center;
+}
+
+.cart ul {
+    list-style: none;
+    padding: 0;
+}
+
+.cart li {
+    margin-bottom: 8px;
+}
+
+/* Actions section */
+.actions {
+    padding: 15px;
+}
+
+/* Congratulations section */
+.congratulations {
+    grid-column: span 3;
+    text-align: center;
+    margin-top: 20px;
 }
 
 @keyframes flicker {

@@ -20,21 +20,21 @@
         </a>
     </div>
     <div class="grid-item">
-        <a href="index.php?challenge=ssrf">
-            <img src="images/ssrf.jpg" alt="Server-Side Request Forgery">
-            <h2>SSRF</h2>
+        <a href="index.php?challenge=business_logic">
+            <img src="images/ssrf.jpg" alt="Business Logic">
+            <h2>Business Logic</h2>
         </a>
     </div>
     <div class="grid-item">
-        <a href="index.php?challenge=misconf">
+        <a href="#">
             <img src="images/misconf.jpg" alt="Misconfiguration">
-            <h2>Misconfig</h2>
+            <h2>Not implemented</h2>
         </a>
     </div>
     <div class="grid-item">
-        <a href="index.php?challenge=csrf">
+        <a href="#">
             <img src="images/csrf.jpg" alt="Client-Side Request Forgery">
-            <h2>CSRF</h2>
+            <h2>Not implemented</h2>
         </a>
     </div>
 </div>
