@@ -131,7 +131,7 @@ label {
 .container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
+    gap: 30px;
     padding: 20px;
 }
 
@@ -224,6 +224,29 @@ label {
     grid-column: span 3;
     text-align: center;
     margin-top: 20px;
+}
+
+.register, .login {
+    border: 1px solid limegreen;
+    background-color: black;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.register {
+    grid-column: 1;
+}
+
+.login {
+    grid-column: 3;
+}
+
+.message {
+    margin-top: 10px;
+    padding: 10px;
+    color: #991111;
+    border-radius: 4px;
+    text-align: center;
 }
 
 @keyframes flicker {
