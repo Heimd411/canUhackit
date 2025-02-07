@@ -1,0 +1,25 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5001:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+  
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: SuPeL33tgoAt
+      MYSQL_DATABASE: hackin
+      MYSQL_USER: UbErHaxor
+      MYSQL_PASSWORD: SuPeL33tgoAt
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
