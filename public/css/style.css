@@ -64,6 +64,32 @@ p {
     margin: 20px 0;
 }
 
+a {
+    color: limegreen;
+    text-decoration: none;
+}
+
+a:hover {
+    color:#991111
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    background-color: black;
+    display: inline-block;
+    border: 2px solid limegreen;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1em;
+}
+
+li {
+    margin: 10px;
+}
+
 /* Button styling */
 button {
     background-color: black;
@@ -247,6 +273,23 @@ label {
     color: #991111;
     border-radius: 4px;
     text-align: center;
+}
+
+.ascii-phone {
+    color: limegreen;
+    font-family: monospace;
+    text-align: left;
+    display: inline-block;
+    margin: 20px;
+}
+
+.phone-container {
+    background-color: #111;
+    text-align: left;
+    padding: 20px; 
+    display: inline-block;
+    border-radius: 10px;
+    margin: 20px;
 }
 
 @keyframes flicker {

@@ -2,6 +2,33 @@
 session_start();
 include '../templates/header.php';
 
+// Clear challenge-specific session variables
+function clearChallengeSession() {
+    // Auth related
+    unset($_SESSION['logged_in']);
+    unset($_SESSION['username']);
+    unset($_SESSION['role']);
+    unset($_SESSION['pending_2fa']);
+    unset($_SESSION['2fa_code']);
+    unset($_SESSION['pending_username']);
+    
+    // Business logic related
+    unset($_SESSION['balance']);
+    unset($_SESSION['cart']);
+    unset($_SESSION['purchased_items']);
+    unset($_SESSION['gift_cards']);
+    unset($_SESSION['used_gift_cards']);
+    unset($_SESSION['discount']);
+    
+    // Keep global session variables
+    // $_SESSION['token']
+    // $_SESSION['points']
+    // $_SESSION['completed_challenges']
+}
+
+// Call at start of challenge
+clearChallengeSession();
+
 // Ensure the session token is set
 if (!isset($_SESSION['token'])) {
     $_SESSION['token'] = bin2hex(random_bytes(32));
