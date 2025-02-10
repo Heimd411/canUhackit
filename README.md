@@ -9,7 +9,8 @@ A containerized web application featuring various security challenges.
 2. Open terminal/command prompt and run:
 ```bash
 # Pull and run the application
-docker pull penciltester/hack-challenges:latest
+git clone https://github.com/Heimd411/canUhackit.git
+cd canUhackit
 docker-compose up -d
 ```
 
