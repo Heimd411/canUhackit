@@ -127,7 +127,7 @@ label {
 .objective-box {
     border: 2px solid limegreen;
     text-align: left;
-    padding: 0px 20px;
+    padding: 5px 20px;
     width: 400px;
     margin: 20px auto;
     background-color: black;
@@ -290,6 +290,10 @@ label {
     display: inline-block;
     border-radius: 10px;
     margin: 20px;
+}
+
+.form-group {
+    margin: 10px;
 }
 
 @keyframes flicker {
