@@ -35,23 +35,6 @@ if (!isset($_SESSION['token'])) {
     $_SESSION['token'] = bin2hex(random_bytes(32));
 }
 
-// Initialize points if not already set
-if (!isset($_SESSION['points'])) {
-    $_SESSION['points'] = 0;
-}
-
-// Function to handle challenge completion
-function completeChallenge($challenge) {
-    if (!isset($_SESSION['completed_challenges'])) {
-        $_SESSION['completed_challenges'] = [];
-    }
-
-    if (!in_array($challenge, $_SESSION['completed_challenges'])) {
-        $_SESSION['completed_challenges'][] = $challenge;
-        $_SESSION['points'] += 1;
-    }
-}
-
 // Simulate a vulnerable search form
 if (isset($_POST['search'])) {
     $search = $_POST['search'];
@@ -71,11 +54,12 @@ if (isset($_POST['search'])) {
     try {
         $result = $conn->query($query);
         
-        // Check if the query returns any rows
+        // Display search results
         if ($result && $result->num_rows > 0) {
-            $search_results = "<div class='centered'><h2>Search Results:</h2><ul>";
+            $search_results = "<div class='results'><h3>Search Results:</h3><ul>";
             while ($row = $result->fetch_assoc()) {
-                $search_results .= "<li>" . htmlspecialchars($row['product']) . ": " . htmlspecialchars($row['description']) . "</li>";
+                $search_results .= "<li>" . htmlspecialchars($row['product']) . ": " . 
+                                 htmlspecialchars($row['description']) . "</li>";
             }
             $search_results .= "</ul></div>";
         } else {
@@ -91,13 +75,23 @@ if (isset($_POST['search'])) {
 if (isset($_POST['secret'])) {
     $secret = $_POST['secret'];
 
-    // Check the secret
-    $query = "SELECT * FROM secrets WHERE secret = '$secret'";
-    $result = $conn->query($query);
+    // Check if the submitted secret matches one in the database
+    $query = "SELECT * FROM secrets WHERE secret = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $secret);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
-        completeChallenge('blacklist_strip');
-        header('Location: index.php?challenge=sqli&complete=blacklist_strip');
+        echo '<div class="centered">';
+        echo '<h2>Congratulations!</h2>';
+        echo '<p>You\'ve found the correct secret!</p>';
+        echo '<form method="post" action="index.php?challenge=sqli">';
+        echo '<input type="hidden" name="token" value="' . $_SESSION['token'] . '">';
+        echo '<input type="hidden" name="complete" value="blacklist_strip">';
+        echo '<button class="real-button" type="submit">Complete Challenge</button>';
+        echo '</form>';
+        echo '</div>';
         exit();
     } else {
         $error = "Incorrect secret";

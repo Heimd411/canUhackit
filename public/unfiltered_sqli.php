@@ -69,12 +69,16 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
         
         // Check if the query returns any rows
         if ($result && $result->num_rows > 0) {
-            // Include the token in the form submission
+            echo '<div class="centered">';
+            echo '<h2>Congratulations!</h2>';
+            echo '<p>You\'ve successfully bypassed the login!</p>';
             echo '<form method="post" action="index.php?challenge=sqli">';
             echo '<input type="hidden" name="token" value="' . $_SESSION['token'] . '">';
             echo '<input type="hidden" name="complete" value="unfiltered_sqli">';
-            echo '<center><button class="real-button" type="submit">Complete Challenge</button></center>';
+            echo '<button class="real-button" type="submit">Complete Challenge</button>';
             echo '</form>';
+            echo '</div>';
+            exit();
         } else {
             $error = "Invalid credentials";
         }

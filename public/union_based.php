@@ -35,23 +35,6 @@ if (!isset($_SESSION['token'])) {
     $_SESSION['token'] = bin2hex(random_bytes(32));
 }
 
-// Initialize points if not already set
-if (!isset($_SESSION['points'])) {
-    $_SESSION['points'] = 0;
-}
-
-// Function to handle challenge completion
-function completeChallenge($challenge) {
-    if (!isset($_SESSION['completed_challenges'])) {
-        $_SESSION['completed_challenges'] = [];
-    }
-
-    if (!in_array($challenge, $_SESSION['completed_challenges'])) {
-        $_SESSION['completed_challenges'][] = $challenge;
-        $_SESSION['points'] += 1;
-    }
-}
-
 // Simulate a vulnerable search form
 if (isset($_POST['search'])) {
     $search = $_POST['search'];
@@ -90,8 +73,15 @@ if (isset($_POST['admin_password'])) {
     $result = $conn->query($query);
 
     if ($result && $result->num_rows > 0) {
-        completeChallenge('union_based');
-        header('Location: index.php?challenge=sqli&complete=union_based');
+        echo '<div class="centered">';
+        echo '<h2>Congratulations!</h2>';
+        echo '<p>You\'ve found the admin password!</p>';
+        echo '<form method="post" action="index.php?challenge=sqli">';
+        echo '<input type="hidden" name="token" value="' . $_SESSION['token'] . '">';
+        echo '<input type="hidden" name="complete" value="union_based">';
+        echo '<button class="real-button" type="submit">Complete Challenge</button>';
+        echo '</form>';
+        echo '</div>';
         exit();
     } else {
         $error = "Incorrect admin password.";

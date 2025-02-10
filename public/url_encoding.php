@@ -35,23 +35,6 @@ if (!isset($_SESSION['token'])) {
     $_SESSION['token'] = bin2hex(random_bytes(32));
 }
 
-// Initialize points if not already set
-if (!isset($_SESSION['points'])) {
-    $_SESSION['points'] = 0;
-}
-
-// Function to handle challenge completion
-function completeChallenge($challenge) {
-    if (!isset($_SESSION['completed_challenges'])) {
-        $_SESSION['completed_challenges'] = [];
-    }
-
-    if (!in_array($challenge, $_SESSION['completed_challenges'])) {
-        $_SESSION['completed_challenges'][] = $challenge;
-        $_SESSION['points'] += 1;
-    }
-}
-
 // Check if the decoded result is submitted
 if (isset($_POST['decoded_result'])) {
     $decoded_result = $_POST['decoded_result'];
@@ -61,8 +44,15 @@ if (isset($_POST['decoded_result'])) {
     $result = $conn->query($query);
 
     if ($result && $result->num_rows > 0) {
-        completeChallenge('url_encoding');
-        header('Location: index.php?challenge=sqli&complete=url_encoding');
+        echo '<div class="centered">';
+        echo '<h2>Congratulations!</h2>';
+        echo '<p>You\'ve successfully decoded the message!</p>';
+        echo '<form method="post" action="index.php?challenge=sqli">';
+        echo '<input type="hidden" name="token" value="' . $_SESSION['token'] . '">';
+        echo '<input type="hidden" name="complete" value="url_encoding">';
+        echo '<button class="real-button" type="submit">Complete Challenge</button>';
+        echo '</form>';
+        echo '</div>';
         exit();
     } else {
         $error = "Incorrect decoded result.";
@@ -73,7 +63,7 @@ if (isset($_POST['decoded_result'])) {
 <div class="centered">
     <h1>Url Encoding and double URL encoding</h1>
     <div class="objective-box">
-        <p>Some%ne is playing tr%cks on me! bm90IGFuc3dlcg==</p>
+        <p>Some%ne is playing tr%cks on me! ZmluZCB0aGUgY29kZSEgbm90IHRoZSBzZWNyZXQh</p>
     </div>
     <form method="get">
         <label for="search">Search:</label>
