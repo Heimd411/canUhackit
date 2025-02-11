@@ -2,6 +2,11 @@
 session_start();
 include '../templates/header.php';
 
+// Ensure the session token is set
+if (!isset($_SESSION['token'])) {
+    $_SESSION['token'] = bin2hex(random_bytes(32));
+}
+
 // Clear challenge-specific session variables
 function clearChallengeSession() {
     // Auth related

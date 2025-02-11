@@ -2,32 +2,41 @@
 session_start();
 include '../templates/header.php';
 
-// Clear challenge-specific session variables
-function clearChallengeSession() {
-    // Auth related
-    unset($_SESSION['logged_in']);
-    unset($_SESSION['username']);
-    unset($_SESSION['role']);
-    unset($_SESSION['pending_2fa']);
-    unset($_SESSION['2fa_code']);
-    unset($_SESSION['pending_username']);
-    
-    // Business logic related
-    unset($_SESSION['balance']);
-    unset($_SESSION['cart']);
-    unset($_SESSION['purchased_items']);
-    unset($_SESSION['gift_cards']);
-    unset($_SESSION['used_gift_cards']);
-    unset($_SESSION['discount']);
-    
-    // Keep global session variables
-    // $_SESSION['token']
-    // $_SESSION['points']
-    // $_SESSION['completed_challenges']
+// Ensure the session token is set
+if (!isset($_SESSION['token'])) {
+    $_SESSION['token'] = bin2hex(random_bytes(32));
 }
 
-// Call at start of challenge
-clearChallengeSession();
+// Only clear session when first starting the challenge
+if (!isset($_SESSION['infinite_money_started'])) {
+    // Clear challenge-specific session variables
+    function clearChallengeSession() {
+        // Auth related
+        unset($_SESSION['logged_in']);
+        unset($_SESSION['username']);
+        unset($_SESSION['role']);
+        unset($_SESSION['pending_2fa']);
+        unset($_SESSION['2fa_code']);
+        unset($_SESSION['pending_username']);
+        
+        // Business logic related
+        unset($_SESSION['balance']);
+        unset($_SESSION['cart']);
+        unset($_SESSION['purchased_items']);
+        unset($_SESSION['gift_cards']);
+        unset($_SESSION['used_gift_cards']);
+        unset($_SESSION['discount']);
+        
+        // Keep global session variables
+        // $_SESSION['token']
+        // $_SESSION['points']
+        // $_SESSION['completed_challenges']
+    }
+
+    // Call only once when starting challenge
+    clearChallengeSession();
+    $_SESSION['infinite_money_started'] = true;
+}
 
 // Clear unrelated session data
 unset($_SESSION['insufficient_workflow_cart']);
@@ -35,7 +44,7 @@ unset($_SESSION['insufficient_workflow_purchased_items']);
 
 // Initialize session variables
 if (!isset($_SESSION['infinite_money_balance'])) {
-    $_SESSION['infinite_money_balance'] = 100;
+    $_SESSION['infinite_money_balance'] = 1000;
 }
 if (!isset($_SESSION['infinite_money_cart'])) {
     $_SESSION['infinite_money_cart'] = array();
