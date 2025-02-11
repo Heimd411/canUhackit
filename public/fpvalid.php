@@ -38,7 +38,7 @@ if (!isset($_SESSION['token'])) {
 <div class="centered">
     <h1>File Path Traversal, Validation of Start of Path</h1>
     <div class="objective-box">
-        <p>Your objective is to find what our current working directory is.</p>
+        <p>Your objective is to find your current working directory is.(dont overthink)</p>
     </div>
     <form method="post">
         <label for="command">Search:</label>
