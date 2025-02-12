@@ -36,16 +36,18 @@ if (isset($_POST['purchase'])) {
             isset($_SESSION['purchased_items']) ? $_SESSION['purchased_items'] : array(),
             $_SESSION['cart']
         );
-        $message = "Successfully purchased: " . implode(", ", array_map(function($item) {
+        $_SESSION['message'] = "Successfully purchased: " . implode(", ", array_map(function($item) {
             return $item['name'];
         }, $_SESSION['cart']));
-        $messageType = "success";
+        $_SESSION['messageType'] = "success";
         $_SESSION['cart'] = array();
         header('Location: insufficient_workflow.php?confirm=1');
         exit;
     } else {
-        $message = "Insufficient funds! You need $" . ($total - $_SESSION['balance']) . " more.";
-        $messageType = "error";
+        $_SESSION['message'] = "Insufficient funds! You need $" . ($total - $_SESSION['balance']) . " more.";
+        $_SESSION['messageType'] = "error";
+        header('Location: insufficient_workflow.php');
+        exit;
     }
 }
 
@@ -112,7 +114,10 @@ if (isset($_POST['add_to_cart']) && isset($_POST['product_id'])) {
 // Handle clear cart
 if (isset($_POST['clear_cart'])) {
     $_SESSION['cart'] = array();
-    $message = "Cart cleared.";
+    $_SESSION['message'] = "Cart cleared.";
+    $_SESSION['messageType'] = "success";
+    header('Location: insufficient_workflow.php');
+    exit;
 }
 
 // Display interface
@@ -138,12 +143,17 @@ if (isset($_POST['clear_cart'])) {
         <?php endforeach; ?>
     </div>
 
+    <?php if (isset($_SESSION['message'])): ?>
+        <p class="<?php echo $_SESSION['messageType']; ?>"><?php echo $_SESSION['message']; ?></p>
+        <?php 
+        unset($_SESSION['message']); 
+        unset($_SESSION['messageType']); 
+        ?>
+    <?php endif; ?>
+
     <?php if (!empty($_SESSION['cart'])): ?>
         <div class="cart">
             <h2>Cart</h2>
-            <?php if (!empty($message)): ?>
-                <p class="<?php echo $messageType; ?>"><?php echo $message; ?></p>
-            <?php endif; ?>
             <?php 
             $total = 0;
             foreach ($_SESSION['cart'] as $item): 
@@ -159,15 +169,4 @@ if (isset($_POST['clear_cart'])) {
         </div>
     <?php endif; ?>
 </div>
-<style>
-.success {
-    color: green;
-    font-weight: bold;
-}
-
-.error {
-    color: red;
-    font-weight: bold;
-}
-</style>
 <?php include '../templates/footer.php'; ?>
