@@ -51,6 +51,25 @@ if (isset($_POST['purchase'])) {
     }
 }
 
+// Handle clear cart - moved to top
+if (isset($_POST['clear_cart'])) {
+    $_SESSION['cart'] = array();
+    $_SESSION['message'] = "Cart cleared.";
+    $_SESSION['messageType'] = "success";
+    header('Location: insufficient_workflow.php');
+    exit;
+}
+
+// Handle add to cart - moved to top
+if (isset($_POST['add_to_cart']) && isset($_POST['product_id'])) {
+    $product_id = $_POST['product_id'];
+    if (isset($products[$product_id])) {
+        $_SESSION['cart'][] = $products[$product_id];
+        header('Location: insufficient_workflow.php');
+        exit;
+    }
+}
+
 // Now include header and rest of the page
 include '../templates/header.php';
 
@@ -102,23 +121,6 @@ $products = array(
 // Initialize message
 $message = "";
 $messageType = ""; // Add this to control message styling
-
-// Handle add to cart
-if (isset($_POST['add_to_cart']) && isset($_POST['product_id'])) {
-    $product_id = $_POST['product_id'];
-    if (isset($products[$product_id])) {
-        $_SESSION['cart'][] = $products[$product_id];
-    }
-}
-
-// Handle clear cart
-if (isset($_POST['clear_cart'])) {
-    $_SESSION['cart'] = array();
-    $_SESSION['message'] = "Cart cleared.";
-    $_SESSION['messageType'] = "success";
-    header('Location: insufficient_workflow.php');
-    exit;
-}
 
 // Display interface
 ?>
