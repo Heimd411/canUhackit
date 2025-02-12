@@ -5,9 +5,18 @@ services:
       - "5001:80"
     volumes:
       - .:/var/www/html
+      - /var/www/html/public/output.txt
     depends_on:
       - db
     user: "www-data:www-data"
+    # Add an entrypoint script to handle file permissions
+    entrypoint: |
+      bash -c '
+        touch /var/www/html/public/output.txt
+        chown www-data:www-data /var/www/html/public/output.txt
+        chmod 666 /var/www/html/public/output.txt
+        apache2-foreground
+      '
   
   db:
     image: mysql:8.0
