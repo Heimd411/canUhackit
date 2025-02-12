@@ -31,8 +31,11 @@ function clearChallengeSession() {
     // $_SESSION['completed_challenges']
 }
 
-// Call at start of challenge
-clearChallengeSession();
+// Only clear session when first starting the challenge
+if (!isset($_SESSION['excessive_trust_started'])) {
+    clearChallengeSession();
+    $_SESSION['excessive_trust_started'] = true;
+}
 
 // Ensure the session token is set
 if (!isset($_SESSION['token'])) {

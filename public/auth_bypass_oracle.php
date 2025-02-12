@@ -31,8 +31,11 @@ function clearChallengeSession() {
     // $_SESSION['completed_challenges']
 }
 
-// Call at start of challenge
-clearChallengeSession();
+// Only clear session when first starting the challenge
+if (!isset($_SESSION['auth_bypass_oracle_started'])) {
+    clearChallengeSession();
+    $_SESSION['auth_bypass_oracle_started'] = true;
+}
 
 // Encryption key and functions
 define('ENCRYPTION_KEY', 'SuperSecretKey123');
