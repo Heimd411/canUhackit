@@ -1,5 +1,37 @@
 <?php
 session_start();
+
+// Process all redirects before including header.php
+// Handle login
+if (isset($_POST['username']) && isset($_POST['password'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Simulate user authentication
+    if ($username === 'ufo' && $password === 'alien') {
+        $_SESSION['authenticated'] = true;
+        $_SESSION['role_selected'] = false;
+        header('Location: auth_bypass_state.php?select_role=1');
+        exit;
+    }
+}
+
+// Handle role selection
+if (isset($_POST['select_role']) && isset($_SESSION['authenticated'])) {
+    $_SESSION['role'] = $_POST['select_role'];
+    $_SESSION['role_selected'] = true;
+    header('Location: auth_bypass_state.php');
+    exit;
+}
+
+// Handle logout
+if (isset($_POST['logout'])) {
+    session_destroy();
+    header('Location: auth_bypass_state.php');
+    exit;
+}
+
+// Now include header and rest of the page
 include '../templates/header.php';
 
 // Ensure the session token is set
@@ -37,36 +69,12 @@ if (!isset($_SESSION['auth_bypass_state_started'])) {
     $_SESSION['auth_bypass_state_started'] = true;
 }
 
-// Ensure the session token is set
-if (!isset($_SESSION['token'])) {
-    $_SESSION['token'] = bin2hex(random_bytes(32));
-}
-
 // Initialize message
 $message = "";
 
-// Handle login
-if (isset($_POST['username']) && isset($_POST['password'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    // Simulate user authentication
-    if ($username === 'ufo' && $password === 'alien') {
-        $_SESSION['authenticated'] = true;
-        $_SESSION['role_selected'] = false; // New flag for role selection step
-        header('Location: auth_bypass_state.php?select_role=1');
-        exit;
-    } else {
-        $message = "Invalid username or password.";
-    }
-}
-
-// Handle role selection
-if (isset($_POST['select_role']) && isset($_SESSION['authenticated'])) {
-    $_SESSION['role'] = $_POST['select_role'];
-    $_SESSION['role_selected'] = true;
-    header('Location: auth_bypass_state.php');
-    exit;
+// Set error message for failed login
+if (isset($_POST['username'])) {
+    $message = "Invalid username or password.";
 }
 
 // Check authentication state
@@ -126,12 +134,5 @@ if (isset($_SESSION['authenticated'])) {
     echo '</form>';
     echo '<p class="message">' . $message . '</p>';
     echo '</div>';
-}
-
-// Handle logout
-if (isset($_POST['logout'])) {
-    session_destroy();
-    header('Location: auth_bypass_state.php');
-    exit;
 }
 ?>

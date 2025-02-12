@@ -37,11 +37,6 @@ if (!isset($_SESSION['excessive_trust_started'])) {
     $_SESSION['excessive_trust_started'] = true;
 }
 
-// Ensure the session token is set
-if (!isset($_SESSION['token'])) {
-    $_SESSION['token'] = bin2hex(random_bytes(32));
-}
-
 // Initialize user balance if not already set
 if (!isset($_SESSION['balance'])) {
     $_SESSION['balance'] = 100;
