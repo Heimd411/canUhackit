@@ -7,15 +7,16 @@ services:
       - .:/var/www/html
     depends_on:
       - db
-    user: "www-data:www-data"
-    # Add an entrypoint script to handle file permissions
+    # Remove user directive to run entrypoint as root
     entrypoint: |
       bash -c '
+        # Create file as root
         mkdir -p /var/www/html/public
         touch /var/www/html/public/output.txt
-        chown www-data:www-data /var/www/html/public/output.txt
+        chown -R www-data:www-data /var/www/html/public
         chmod 666 /var/www/html/public/output.txt
-        apache2-foreground
+        # Switch to www-data user for Apache
+        exec apache2-foreground
       '
   
   db:
