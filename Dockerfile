@@ -22,3 +22,11 @@ COPY . /var/www/html/
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/
+
+# Add these lines before your final CMD
+RUN touch /var/www/html/public/output.txt && \
+    chown www-data:www-data /var/www/html/public/output.txt && \
+    chmod 666 /var/www/html/public/output.txt
+
+# Ensure the directory has correct permissions
+RUN chown -R www-data:www-data /var/www/html/public

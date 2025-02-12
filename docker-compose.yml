@@ -5,8 +5,10 @@ services:
       - "5001:80"
     volumes:
       - .:/var/www/html
+      - ./public/output.txt:/var/www/html/public/output.txt:rw
     depends_on:
       - db
+    user: "www-data:www-data"
   
   db:
     image: mysql:8.0
