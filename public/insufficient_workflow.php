@@ -1,5 +1,48 @@
 <?php
 session_start();
+
+// Process all redirects and session handling before including header.php
+// Handle purchase confirmation redirect
+if (isset($_GET['confirm'])) {
+    if (!empty($_SESSION['cart'])) {
+        $_SESSION['purchased_items'] = array_merge(
+            isset($_SESSION['purchased_items']) ? $_SESSION['purchased_items'] : array(),
+            $_SESSION['cart']
+        );
+        
+        // Check if Graphics Card was obtained through exploit
+        foreach ($_SESSION['cart'] as $item) {
+            if ($item['name'] === 'Graphics Card') {
+                $_SESSION['challenge_complete'] = true;
+                header('Location: insufficient_workflow.php');
+                exit;
+            }
+        }
+    }
+    header('Location: insufficient_workflow.php');
+    exit;
+}
+
+// Handle purchase redirect
+if (isset($_POST['purchase'])) {
+    $total = 0;
+    foreach ($_SESSION['cart'] as $item) {
+        $total += $item['price'];
+    }
+    
+    if ($_SESSION['balance'] >= $total) {
+        $_SESSION['balance'] -= $total;
+        $_SESSION['purchased_items'] = array_merge(
+            isset($_SESSION['purchased_items']) ? $_SESSION['purchased_items'] : array(),
+            $_SESSION['cart']
+        );
+        $_SESSION['cart'] = array();
+        header('Location: insufficient_workflow.php?confirm=1');
+        exit;
+    }
+}
+
+// Now include header and rest of the page
 include '../templates/header.php';
 
 // Ensure the session token is set
@@ -62,53 +105,6 @@ if (isset($_POST['add_to_cart']) && isset($_POST['product_id'])) {
 if (isset($_POST['clear_cart'])) {
     $_SESSION['cart'] = array();
     $message = "Cart cleared.";
-}
-
-// Handle purchase
-if (isset($_POST['purchase'])) {
-    $total = 0;
-    foreach ($_SESSION['cart'] as $item) {
-        $total += $item['price'];
-    }
-    
-    if ($_SESSION['balance'] >= $total) {
-        $_SESSION['balance'] -= $total;
-        $_SESSION['purchased_items'] = array_merge(
-            isset($_SESSION['purchased_items']) ? $_SESSION['purchased_items'] : array(),
-            $_SESSION['cart']
-        );
-        $_SESSION['cart'] = array();
-        header('Location: insufficient_workflow.php?confirm=1');
-        exit;
-    } else {
-        $message = "Insufficient funds!";
-    }
-}
-
-// Vulnerability: Order confirmation doesn't verify payment
-if (isset($_GET['confirm'])) {
-    if (!empty($_SESSION['cart'])) {
-        $_SESSION['purchased_items'] = array_merge(
-            isset($_SESSION['purchased_items']) ? $_SESSION['purchased_items'] : array(),
-            $_SESSION['cart']
-        );
-        
-        // Check if Graphics Card was obtained through exploit
-        foreach ($_SESSION['cart'] as $item) {
-            if ($item['name'] === 'Graphics Card') {
-                echo '<div class="centered">';
-                echo '<h2>Order Confirmation</h2>';
-                echo '<form method="post" action="index.php?challenge=business_logic">';
-                echo '<input type="hidden" name="token" value="' . $_SESSION['token'] . '">';
-                echo '<input type="hidden" name="complete" value="insufficient_workflow">';
-                echo '<button class="real-button" type="submit">Complete Challenge</button>';
-                echo '</form></div>';
-                exit;
-            }
-        }
-    }
-    header('Location: insufficient_workflow.php');
-    exit;
 }
 
 // Display interface
