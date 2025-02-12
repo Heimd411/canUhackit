@@ -59,10 +59,15 @@ $allowed_commands = [
 if (isset($_POST['command'])) {
     $command = $_POST['command'];
 
-    // Allow only specific non-harmful commands
-    if (in_array($command, $allowed_commands)) {
-        // Vulnerable command execution with output redirection using absolute path
-        shell_exec($command . ' > output.txt');
+    // Special handling for reading output.txt
+    if ($command === 'cat output.txt' || $command === 'type output.txt') {
+        $output = file_get_contents(__DIR__ . '/output.txt');
+        echo "<center><pre>" . htmlspecialchars($output) . "</pre></center>";
+        // ... rest of the output reading code ...
+    }
+    // Normal command execution
+    else if (in_array($command, $allowed_commands)) {
+        shell_exec($command . ' > ' . __DIR__ . '/output.txt');
         echo "<center><p>no results</p></center>";
     } else {
         echo "<center><p class='error'>Invalid command: " . htmlspecialchars($command) . "</p></center>";
