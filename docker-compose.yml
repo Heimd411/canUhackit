@@ -5,13 +5,13 @@ services:
       - "5001:80"
     volumes:
       - .:/var/www/html
-      - /var/www/html/public/output.txt
     depends_on:
       - db
     user: "www-data:www-data"
     # Add an entrypoint script to handle file permissions
     entrypoint: |
       bash -c '
+        mkdir -p /var/www/html/public
         touch /var/www/html/public/output.txt
         chown www-data:www-data /var/www/html/public/output.txt
         chmod 666 /var/www/html/public/output.txt
