@@ -36,9 +36,16 @@ if (isset($_POST['purchase'])) {
             isset($_SESSION['purchased_items']) ? $_SESSION['purchased_items'] : array(),
             $_SESSION['cart']
         );
+        $message = "Successfully purchased: " . implode(", ", array_map(function($item) {
+            return $item['name'];
+        }, $_SESSION['cart']));
+        $messageType = "success";
         $_SESSION['cart'] = array();
         header('Location: insufficient_workflow.php?confirm=1');
         exit;
+    } else {
+        $message = "Insufficient funds! You need $" . ($total - $_SESSION['balance']) . " more.";
+        $messageType = "error";
     }
 }
 
@@ -92,6 +99,7 @@ $products = array(
 
 // Initialize message
 $message = "";
+$messageType = ""; // Add this to control message styling
 
 // Handle add to cart
 if (isset($_POST['add_to_cart']) && isset($_POST['product_id'])) {
@@ -134,7 +142,7 @@ if (isset($_POST['clear_cart'])) {
         <div class="cart">
             <h2>Cart</h2>
             <?php if (!empty($message)): ?>
-                <p><?php echo $message; ?></p>
+                <p class="<?php echo $messageType; ?>"><?php echo $message; ?></p>
             <?php endif; ?>
             <?php 
             $total = 0;
@@ -151,4 +159,15 @@ if (isset($_POST['clear_cart'])) {
         </div>
     <?php endif; ?>
 </div>
+<style>
+.success {
+    color: green;
+    font-weight: bold;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+</style>
 <?php include '../templates/footer.php'; ?>
