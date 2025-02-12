@@ -296,6 +296,13 @@ label {
     margin: 10px;
 }
 
+.product-resize {
+    padding: 10px;
+    text-align: center;
+    font-size: 1.1em;
+    transition: transform 0.3s ease;
+}
+
 @keyframes flicker {
     0%, 95%, 100% {
         opacity: 1;

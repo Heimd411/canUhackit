@@ -119,7 +119,7 @@ if (isset($_POST['clear_cart'])) {
     
     <div class="grid-container">
         <?php foreach ($products as $id => $product): ?>
-            <div class="grid-item">
+            <div class="grid-item product-resize">
                 <h2><?php echo $product['name']; ?></h2>
                 <p>Price: $<?php echo $product['price']; ?></p>
                 <form method="post">
