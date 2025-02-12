@@ -61,36 +61,33 @@ if (isset($_POST['command'])) {
 
     // Special handling for reading output.txt
     if ($command === 'cat output.txt' || $command === 'type output.txt') {
-        $output = file_get_contents(__DIR__ . '/output.txt');
-        echo "<center><pre>" . htmlspecialchars($output) . "</pre></center>";
-        // ... rest of the output reading code ...
+        if (file_exists(__DIR__ . '/output.txt')) {
+            $output = file_get_contents(__DIR__ . '/output.txt');
+            echo "<center><pre>" . htmlspecialchars($output) . "</pre></center>";
+
+            // Check if the output contains the current user
+            $current_user = trim(shell_exec('whoami'));
+            if (trim($output) === $current_user) {
+                // Include the token in the form submission for challenge completion
+                echo '<form method="post" action="index.php?challenge=cmdinject">';
+                echo '<input type="hidden" name="token" value="' . $_SESSION['token'] . '">';
+                echo '<input type="hidden" name="complete" value="oscmdblind">';
+                echo '<center><button class="real-button" type="submit">Complete Challenge</button></center>';
+                echo '</form>';
+            }
+        } else {
+            echo "<center><p class='error'>Output file not found</p></center>";
+        }
     }
     // Normal command execution
     else if (in_array($command, $allowed_commands)) {
-        shell_exec($command . ' > ' . __DIR__ . '/output.txt');
+        $cmd_output = shell_exec($command);
+        file_put_contents(__DIR__ . '/output.txt', $cmd_output);
         echo "<center><p>no results</p></center>";
     } else {
         echo "<center><p class='error'>Invalid command: " . htmlspecialchars($command) . "</p></center>";
     }
 }
 
-// Read the contents of the output file if requested
-if (isset($_POST['command']) && ($_POST['command'] === 'cat output.txt' || $_POST['command'] === 'type output.txt')) {
-    $output = file_get_contents('output.txt');
-    echo "<center><pre>" . htmlspecialchars($output) . "</pre></center>";
-
-    // Check if the output contains the current user
-    $current_user = trim(shell_exec('whoami'));
-    if (trim($output) === $current_user) {
-        // Include the token in the form submission for challenge completion
-        echo '<form method="post" action="index.php?challenge=cmdinject">';
-        echo '<input type="hidden" name="token" value="' . $_SESSION['token'] . '">';
-        echo '<input type="hidden" name="complete" value="oscmdblind">';
-        echo '<center><button class="real-button" type="submit">Complete Challenge</button></center>';
-        echo '</form>';
-    } else {
-        echo "<p class='error'></p>";
-    }
-}
 include '../templates/footer.php';
 ?>
