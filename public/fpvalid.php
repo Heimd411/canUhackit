@@ -60,13 +60,13 @@ if (isset($_POST['command'])) {
         $output = shell_exec($command);
         $output = trim($output);
         // Use a regular expression to extract the relevant part of the path
-        if (preg_match('/(\/www\/public|\\\www\\\public)$/', $output, $matches)) {
+        if (preg_match('/(\/var\/www\/html\/public|\/www\/public|\\\www\\\public)$/', $output, $matches)) {
             $output = $matches[0];
         }
         echo "<center><pre>" . htmlspecialchars($output) . "</pre></center>";
 
         // Check if the output matches the expected path
-        if ($output === '/www/public' || $output === '\www\public') {
+        if ($output === '/www/public' || $output === '\www\public' || $output === '/var/www/html/public') {
             // Include the token in the form submission for challenge completion
             echo '<form method="post" action="index.php?challenge=cmdinject">';
             echo '<input type="hidden" name="token" value="' . $_SESSION['token'] . '">';

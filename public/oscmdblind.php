@@ -61,17 +61,9 @@ if (isset($_POST['command'])) {
 
     // Allow only specific non-harmful commands
     if (in_array($command, $allowed_commands)) {
-        // Add debug information
-        $debug_output = shell_exec($command);
-        echo "<center><p>Debug: Command output before redirection:</p>";
-        echo "<pre>" . htmlspecialchars($debug_output) . "</pre></center>";
-        
         // Vulnerable command execution with output redirection using absolute path
         shell_exec($command . ' > ' . __DIR__ . '/output.txt');
-        echo "<center><p>Command executed. Output redirected to file.</p></center>";
-        
-        // Debug file path
-        echo "<center><p>Debug: Output file location: " . __DIR__ . "/output.txt</p></center>";
+        echo "<center><p>no results</p></center>";
     } else {
         echo "<center><p class='error'>Invalid command: " . htmlspecialchars($command) . "</p></center>";
     }
@@ -89,7 +81,7 @@ if (isset($_POST['command']) && ($_POST['command'] === 'cat output.txt' || $_POS
         echo '<form method="post" action="index.php?challenge=cmdinject">';
         echo '<input type="hidden" name="token" value="' . $_SESSION['token'] . '">';
         echo '<input type="hidden" name="complete" value="oscmdblind">';
-        echo '<center><button class="real-button" type="submit">Complete Challange</button></center>';
+        echo '<center><button class="real-button" type="submit">Complete Challenge</button></center>';
         echo '</form>';
     } else {
         echo "<p class='error'></p>";
