@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+// Define products first
+$products = array(
+    'graphics_card' => array('name' => 'Graphics Card', 'price' => 1400),
+    'usb_drive' => array('name' => 'USB Drive', 'price' => 20)
+);
+
 // Process all redirects and session handling before including header.php
 // Handle purchase confirmation redirect
 if (isset($_GET['confirm'])) {
@@ -111,12 +117,6 @@ if (!isset($_SESSION['balance'])) {
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = array();
 }
-
-// Products
-$products = array(
-    'graphics_card' => array('name' => 'Graphics Card', 'price' => 1400),
-    'usb_drive' => array('name' => 'USB Drive', 'price' => 20)
-);
 
 // Initialize message
 $message = "";
