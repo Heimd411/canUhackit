@@ -11,19 +11,23 @@ $products = array(
 // Handle purchase confirmation redirect
 if (isset($_GET['confirm'])) {
     if (!empty($_SESSION['cart'])) {
+        // Check if Graphics Card was obtained through exploit FIRST
+        foreach ($_SESSION['cart'] as $item) {
+            if ($item['name'] === 'Graphics Card') {
+                $_SESSION['challenge_complete'] = true;
+                // Add debug message
+                $_SESSION['message'] = "Challenge completed! Graphics Card obtained!";
+                $_SESSION['messageType'] = "success";
+                // Clear cart after successful exploit
+                $_SESSION['cart'] = array();
+            }
+        }
+        
+        // Only merge items if Graphics Card wasn't found
         $_SESSION['purchased_items'] = array_merge(
             isset($_SESSION['purchased_items']) ? $_SESSION['purchased_items'] : array(),
             $_SESSION['cart']
         );
-        
-        // Check if Graphics Card was obtained through exploit
-        foreach ($_SESSION['cart'] as $item) {
-            if ($item['name'] === 'Graphics Card') {
-                $_SESSION['challenge_complete'] = true;
-                header('Location: insufficient_workflow.php');
-                exit;
-            }
-        }
     }
     header('Location: insufficient_workflow.php');
     exit;
@@ -167,6 +171,17 @@ $messageType = ""; // Add this to control message styling
             <form method="post">
                 <button class="real-button" type="submit" name="purchase">Purchase</button>
                 <button class="real-button" type="submit" name="clear_cart">Clear Cart</button>
+            </form>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['challenge_complete']) && $_SESSION['challenge_complete']): ?>
+        <div class="congratulations">
+            <h2>Congratulations!</h2>
+            <form method="post" action="index.php?challenge=business_logic">
+                <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+                <input type="hidden" name="complete" value="insufficient_workflow">
+                <center><button class="real-button" type="submit">Complete Challenge</button></center>
             </form>
         </div>
     <?php endif; ?>
