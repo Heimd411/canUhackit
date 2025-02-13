@@ -14,6 +14,9 @@ function decrypt($data) {
     return openssl_decrypt(base64_decode($data), 'AES-256-CBC', ENCRYPTION_KEY, OPENSSL_RAW_DATA, $iv);
 }
 
+// Near the top of the file, define valid roles
+define('VALID_ROLES', ['consumer', 'creator']);
+
 // Update the cookie checking code at the top
 if (isset($_COOKIE['stay-logged-in']) && !isset($_SESSION['logged_in'])) {
     try {
@@ -66,12 +69,15 @@ if (!isset($_SESSION['users'])) {
     );
 }
 
-// Handle stay-logged-in cookie generation
+// Update registration handler
 if (isset($_POST['register'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $stay_logged_in = isset($_POST['stay_logged_in']);
-    $role = 'user';  // Default role
+    $selected_role = isset($_POST['role']) ? $_POST['role'] : 'consumer';  // Default to consumer
+    
+    // Validate selected role
+    $role = in_array($selected_role, VALID_ROLES) ? $selected_role : 'consumer';
     
     if ($username === 'admin') {
         $message = "Cannot register admin user!";
@@ -137,7 +143,7 @@ if (isset($_POST['logout'])) {
 
 <h1 class="centered">Authentication Oracle Challenge</h1>
 <div class="objective-box">
-    <p>This challenge demonstrates an encryption oracle vulnerability through a "stay logged in" feature. Try to login as admin!</p>
+    <p>This challenge demonstrates an encryption oracle vulnerability through a "stay logged in" feature. Can you assume the role of admin?</p>
 </div>
 
 <div class="container">
@@ -146,6 +152,10 @@ if (isset($_POST['logout'])) {
         <form method="post">
             <input type="text" name="username" placeholder="Username" required><br>
             <input type="password" name="password" placeholder="Password" required><br>
+            <select class="dripdown" name="role" required>
+                <option value="consumer">Consumer</option>
+                <option value="creator">Creator</option>
+            </select><br>
             <label><input type="checkbox" name="stay_logged_in"> Stay logged in</label><br>
             <button class="real-button" type="submit" name="register">Register</button>
         </form>

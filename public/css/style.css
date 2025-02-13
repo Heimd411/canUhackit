@@ -303,6 +303,10 @@ label {
     transition: transform 0.3s ease;
 }
 
+.dripdown {
+    margin: 5px 0;
+}
+
 @keyframes flicker {
     0%, 95%, 100% {
         opacity: 1;
