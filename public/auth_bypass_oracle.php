@@ -1,5 +1,40 @@
 <?php
 session_start();
+
+// Define encryption key and functions first
+define('ENCRYPTION_KEY', 'SuperSecretKey123');
+
+function encrypt($data) {
+    $iv = str_repeat('A', 16);  // Fixed IV for predictable encryption
+    return base64_encode(openssl_encrypt($data, 'AES-256-CBC', ENCRYPTION_KEY, OPENSSL_RAW_DATA, $iv));
+}
+
+function decrypt($data) {
+    $iv = str_repeat('A', 16);
+    return openssl_decrypt(base64_decode($data), 'AES-256-CBC', ENCRYPTION_KEY, OPENSSL_RAW_DATA, $iv);
+}
+
+// Update the cookie checking code at the top
+if (isset($_COOKIE['stay-logged-in']) && !isset($_SESSION['logged_in'])) {
+    try {
+        $parts = explode(':', $_COOKIE['stay-logged-in']);
+        if (count($parts) === 3) {
+            $username = decrypt($parts[0]);
+            $password = decrypt($parts[1]);
+            $role = decrypt($parts[2]);
+            
+            // Only check username exists and role
+            if (isset($_SESSION['users'][$username])) {
+                $_SESSION['logged_in'] = true;
+                $_SESSION['username'] = $username;
+                $_SESSION['role'] = $role;
+            }
+        }
+    } catch(Exception $e) {
+        // Invalid cookie - ignore
+    }
+}
+
 include '../templates/header.php';
 
 // Ensure the session token is set
@@ -9,26 +44,10 @@ if (!isset($_SESSION['token'])) {
 
 // Clear challenge-specific session variables
 function clearChallengeSession() {
-    // Auth related
     unset($_SESSION['logged_in']);
     unset($_SESSION['username']);
     unset($_SESSION['role']);
-    unset($_SESSION['pending_2fa']);
-    unset($_SESSION['2fa_code']);
-    unset($_SESSION['pending_username']);
-    
-    // Business logic related
-    unset($_SESSION['balance']);
-    unset($_SESSION['cart']);
-    unset($_SESSION['purchased_items']);
-    unset($_SESSION['gift_cards']);
-    unset($_SESSION['used_gift_cards']);
-    unset($_SESSION['discount']);
-    
-    // Keep global session variables
-    // $_SESSION['token']
-    // $_SESSION['points']
-    // $_SESSION['completed_challenges']
+    unset($_SESSION['stay_logged_in']);
 }
 
 // Only clear session when first starting the challenge
@@ -37,54 +56,67 @@ if (!isset($_SESSION['auth_bypass_oracle_started'])) {
     $_SESSION['auth_bypass_oracle_started'] = true;
 }
 
-// Encryption key and functions
-define('ENCRYPTION_KEY', 'SuperSecretKey123');
-
-function encrypt($data) {
-    $iv = openssl_random_pseudo_bytes(16);
-    $encrypted = openssl_encrypt($data, 'AES-256-CBC', ENCRYPTION_KEY, 0, $iv);
-    return base64_encode($iv . $encrypted);
-}
-
-function decrypt($data) {
-    $data = base64_decode($data);
-    $iv = substr($data, 0, 16);
-    $encrypted = substr($data, 16);
-    return openssl_decrypt($encrypted, 'AES-256-CBC', ENCRYPTION_KEY, 0, $iv);
-}
-
-// Initialize users
+// Initialize admin account
 if (!isset($_SESSION['users'])) {
     $_SESSION['users'] = array(
         'admin' => array(
-            'password' => encrypt('adminpass123'),
+            'password' => 'SuperSecret123!',
             'role' => 'admin'
         )
     );
 }
 
-// Handle registration
+// Handle stay-logged-in cookie generation
 if (isset($_POST['register'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
+    $stay_logged_in = isset($_POST['stay_logged_in']);
+    $role = 'user';  // Default role
     
-    $encrypted_password = encrypt($password);
-    $_SESSION['users'][$username] = array(
-        'password' => $encrypted_password,
-        'role' => 'user'
-    );
-    
-    // Vulnerability: Show encrypted credentials
-    $message = "Registration successful! Encrypted credentials: " . $encrypted_password;
+    if ($username === 'admin') {
+        $message = "Cannot register admin user!";
+    } else {
+        $_SESSION['users'][$username] = array(
+            'password' => $password,
+            'role' => $role
+        );
+        
+        // Log user in after registration
+        $_SESSION['logged_in'] = true;
+        $_SESSION['username'] = $username;
+        $_SESSION['role'] = $role;
+        
+        if ($stay_logged_in) {
+            // Encrypt username, password and role separately
+            $encrypted_username = encrypt($username);
+            $encrypted_password = encrypt($password);
+            $encrypted_role = encrypt($role);
+            $encrypted_cookie = $encrypted_username . ':' . $encrypted_password . ':' . $encrypted_role;
+            
+            setcookie(
+                'stay-logged-in',
+                $encrypted_cookie,
+                [
+                    'expires' => time() + 3600,
+                    'path' => '/',
+                    'httponly' => true,
+                    'samesite' => 'Lax'
+                ]
+            );
+            $message = "Registration successful! Cookie set.";
+        } else {
+            $message = "Registration successful!";
+        }
+    }
 }
 
-// Handle login
+// Normal login handler
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
-    $encrypted_password = $_POST['encrypted_password'];
+    $password = $_POST['password'];
     
     if (isset($_SESSION['users'][$username]) && 
-        $_SESSION['users'][$username]['password'] === $encrypted_password) {
+        $_SESSION['users'][$username]['password'] === $password) {
         $_SESSION['logged_in'] = true;
         $_SESSION['username'] = $username;
         $_SESSION['role'] = $_SESSION['users'][$username]['role'];
@@ -94,45 +126,66 @@ if (isset($_POST['login'])) {
     }
 }
 
+// Add logout handler
+if (isset($_POST['logout'])) {
+    clearChallengeSession();
+    setcookie('stay-logged-in', '', time() - 3600, '/');
+    header('Location: auth_bypass_oracle.php');
+    exit;
+}
 ?>
+
 <h1 class="centered">Authentication Oracle Challenge</h1>
 <div class="objective-box">
-        <p>This challenge demonstrates an encryption oracle vulnerability. Try to login as admin!</p>
-    </div>
+    <p>This challenge demonstrates an encryption oracle vulnerability through a "stay logged in" feature. Try to login as admin!</p>
+</div>
+
 <div class="container">
     <div class="register">
         <h2>Register</h2>
         <form method="post">
             <input type="text" name="username" placeholder="Username" required><br>
             <input type="password" name="password" placeholder="Password" required><br>
+            <label><input type="checkbox" name="stay_logged_in"> Stay logged in</label><br>
             <button class="real-button" type="submit" name="register">Register</button>
         </form>
         <?php if (isset($message) && isset($_POST['register'])): ?>
             <p class="message"><?php echo $message; ?></p>
         <?php endif; ?>
     </div>
+    
     <div class="login">
-        <h2>Login</h2>
-        <form method="post">
-            <input type="text" name="username" placeholder="Username" required><br>
-            <input type="text" name="encrypted_password" placeholder="Encrypted Password" required><br>
-            <button class="real-button" type="submit" name="login">Login</button>
-        </form>
-        <?php if (isset($message) && isset($_POST['login'])): ?>
-            <p class="message"><?php echo $message; ?></p>
+        <?php if (!isset($_SESSION['logged_in'])): ?>
+            <h2>Login</h2>
+            <form method="post">
+                <input type="text" name="username" placeholder="Username" required><br>
+                <input type="password" name="password" placeholder="Password" required><br>
+                <button class="real-button" type="submit" name="login">Login</button>
+            </form>
+            <?php if (isset($message) && (isset($_POST['login']))): ?>
+                <p class="message"><?php echo $message; ?></p>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="logout">
+                <p>Logged in as: <?php echo htmlspecialchars($_SESSION['username']); ?> 
+                   (<?php echo htmlspecialchars($_SESSION['role']); ?>)</p>
+                <form method="post">
+                    <button class="real-button" type="submit" name="logout">Logout</button>
+                </form>
+            </div>
         <?php endif; ?>
     </div>
+    
 </div>
 
 <?php if (isset($_SESSION['logged_in']) && isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-        <div class="congratulations">
-            <h2>Congratulations!</h2>
-            <form method="post" action="index.php?challenge=encryption">
-                <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
-                <input type="hidden" name="complete" value="auth_bypass_oracle">
-                <button class="real-button" type="submit">Complete Challenge</button>
-            </form>
-        </div>
-    <?php endif; ?>
-</div>
+    <div class="congratulations">
+        <h2>Congratulations!</h2>
+        <form method="post" action="index.php?challenge=business_logic">
+            <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+            <input type="hidden" name="complete" value="auth_bypass_oracle">
+            <button class="real-button" type="submit">Complete Challenge</button>
+        </form>
+    </div>
+<?php endif; ?>
 <?php include '../templates/footer.php'; ?>
