@@ -41,11 +41,9 @@ if (!isset($_SESSION['token'])) {
     <div class="objective-box">
         <p>Password? What password? Maybe i don't need a password?</p>
     </div>
-    <form method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
+    <form method="post" class="login-form">
+        <input type="text" id="username" name="username" placeholder="Username">
+        <input type="password" id="password" name="password" placeholder="Password">
         <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
         <button class="real-button" type="submit">Login</button>
     </form>
@@ -60,9 +58,6 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 
     // Vulnerable SQL query
     $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
-    
-    // Debug output
-    echo "<!-- Debug: " . htmlspecialchars($query) . " -->";
     
     try {
         $result = $conn->query($query);

@@ -117,11 +117,9 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
             </form>
         </div>
     <?php else: ?>
-        <form method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br>
+        <form method="post" class="login-form">
+            <input type="text" id="username" name="username" placeholder="username" required><br>
+            <input type="password" id="password" name="password" placeholder="password" required><br>
             <button class="real-button" type="submit">Login</button>
         </form>
         <?php if (isset($error)): ?>

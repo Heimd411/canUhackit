@@ -105,14 +105,12 @@ if (isset($_POST['secret'])) {
         <p>There are secrets hiding in the database, can you uncover the secret?</p>
     </div>
     <form method="post">
-        <label for="search">Search:</label>
-        <input type="text" id="search" name="search">
+        <input type="text" id="search" name="search" placeholder="Search products">
         <button class="real-button" type="submit">Search</button>
     </form>
     <?php if (isset($search_results)) { echo $search_results; } ?>
     <form method="post">
-        <label for="secret">Secret:</label>
-        <input type="text" id="secret" name="secret">
+        <input type="text" id="secret" name="secret" placeholder="Secret">
         <button class="real-button" type="submit">Submit</button>
     </form>
     <?php if (isset($error)) { echo "<p class='error'>$error</p>"; } ?>

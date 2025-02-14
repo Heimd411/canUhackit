@@ -126,12 +126,10 @@ if (!isset($_SESSION['logged_in'])) {
         <div class="login-form">
             <form method="post">
                 <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" placeholder="username" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" placeholder="password" required>
                 </div>
                 <div class="form-group">
                     <label>

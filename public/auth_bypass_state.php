@@ -125,11 +125,9 @@ if (isset($_SESSION['authenticated'])) {
     echo '<p>The admin account is well protected, but maybe there is a way to access it anyway?</p>';
     echo '<p>User: ufo<br>Password: alien</p>';
     echo '</div>';
-    echo '<form method="post">';
-    echo '<label for="username">Username:</label><br>';
-    echo '<input type="text" id="username" name="username" required><br>';
-    echo '<label for="password">Password:</label><br>';
-    echo '<input type="password" id="password" name="password" required><br>';
+    echo '<form method="post" class="login-form">';
+    echo '<input type="text" id="username" name="username" placeholder="username" required><br>';
+    echo '<input type="password" id="password" name="password" placeholder="password" required><br>';
     echo '<button class="real-button" type="submit">Login</button>';
     echo '</form>';
     echo '<p class="message">' . $message . '</p>';

@@ -95,14 +95,12 @@ if (isset($_POST['admin_password'])) {
         <p>It has to be here somewhere? Password!</p>
     </div>
     <form method="post">
-        <label for="search">Search:</label>
-        <input type="text" id="search" name="search">
+        <input type="text" id="search" name="search" placeholder="Search products">
         <button class="real-button" type="submit">Search</button>
     </form>
     <?php if (isset($search_results)) { echo $search_results; } ?>
     <form method="post">
-        <label for="admin_password">Admin Password:</label>
-        <input type="password" id="admin_password" name="admin_password">
+        <input type="password" id="admin_password" name="admin_password" placeholder="admin password">
         <button class="real-button" type="submit">Submit</button>
     </form>
     <?php if (isset($error)) { echo "<p class='error'>$error</p>"; } ?>

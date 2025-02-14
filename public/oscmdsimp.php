@@ -41,8 +41,7 @@ if (!isset($_SESSION['token'])) {
         <p>Hey you. Yes you! I'm looking for a file, can you help me find it?</p>
     </div>
     <form method="post">
-        <label for="command">Search:</label>
-        <input type="text" id="command" name="command">
+        <input type="text" id="command" name="command" placeholder="Command">
         <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
         <button class="real-button" type="submit">Submit</button>
     </form>

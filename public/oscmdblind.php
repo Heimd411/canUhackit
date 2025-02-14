@@ -47,8 +47,7 @@ $allowed_commands = [
         <p>Are we able to inject commands? Where does the output go? And who am i?</p>
     </div>
     <form method="post">
-        <label for="command">Search:</label>
-        <input type="text" id="command" name="command">
+        <input type="text" id="command" name="command" placeholder="Command">
         <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
         <button class="real-button" type="submit">Submit</button>
     </form>

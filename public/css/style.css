@@ -225,6 +225,12 @@ label {
     text-align: center;
 }
 
+.products {
+    background-color: black;
+    border: 1px solid limegreen;
+    padding: 10px;
+}
+
 /* Cart section */
 .cart {
     padding: 15px;
@@ -243,6 +249,8 @@ label {
 /* Actions section */
 .actions {
     padding: 15px;
+    background-color: black;
+    border: 1px solid limegreen;
 }
 
 /* Congratulations section */
@@ -265,6 +273,21 @@ label {
 
 .login {
     grid-column: 3;
+}
+
+.login-form {
+    display: flex;
+    margin: 5px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.receipt {
+    border: 1px solid limegreen;
+    background-color: black;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
 }
 
 .message {
@@ -294,6 +317,10 @@ label {
 
 .form-group {
     margin: 10px;
+}
+
+.text-small {
+    font-size: 1em;
 }
 
 .product-resize {

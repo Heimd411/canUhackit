@@ -66,14 +66,12 @@ if (isset($_POST['decoded_result'])) {
         <p>Some%ne is playing tr%cks on me! ZmluZCB0aGUgY29kZSEgbm90IHRoZSBzZWNyZXQh</p>
     </div>
     <form method="get">
-        <label for="search">Search:</label>
-        <input type="text" id="search" name="search">
+        <input type="text" id="search" name="search" placeholder="Search products">
         <button class="real-button" type="submit">Search</button>
     </form>
     <?php if (isset($search_results)) { echo $search_results; } ?>
     <form method="post">
-        <label for="decoded_result">Decoded Result:</label>
-        <input type="text" id="decoded_result" name="decoded_result">
+        <input type="text" id="decoded_result" name="decoded_result" placeholder="Decoded result">
         <button class="real-button" type="submit">Submit</button>
     </form>
     <?php if (isset($error)) { echo "<p class='error'>$error</p>"; } ?>

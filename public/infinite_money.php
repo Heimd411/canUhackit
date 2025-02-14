@@ -44,7 +44,7 @@ unset($_SESSION['insufficient_workflow_purchased_items']);
 
 // Initialize session variables
 if (!isset($_SESSION['infinite_money_balance'])) {
-    $_SESSION['infinite_money_balance'] = 1000;
+    $_SESSION['infinite_money_balance'] = 100;
 }
 if (!isset($_SESSION['infinite_money_cart'])) {
     $_SESSION['infinite_money_cart'] = array();
@@ -203,14 +203,15 @@ if (isset($_SESSION['infinite_money_discount'])) {
 
     <div class="actions">
         <h2>Coupon</h2>
+        <p class="text-small">Use "thirtyoff" coupon code to get 30% off your purchase.</p>
         <form method="post">
-            Coupon Code: <input type="text" name="coupon"><br>
-            <button class="real-button" type="submit" name="apply_coupon">Apply Coupon (thirtyoff)</button>
+            <input type="text" name="coupon" placeholder="coupon code"><br>
+            <button class="real-button" type="submit" name="apply_coupon">Apply</button>
         </form>
 
         <h2>Redeem Gift Card</h2>
         <form method="post">
-            Gift Card Code: <input type="text" name="gift_card_code"><br>
+            <input type="text" name="gift_card_code" placeholder="gift code"><br>
             <button class="real-button" type="submit" name="redeem_gift_card">Redeem</button>
         </form>
     </div>

@@ -41,8 +41,7 @@ if (!isset($_SESSION['token'])) {
         <p>Your objective is simple, someone has uploaded a secret.txt file. It is most likly found in the uploads folder, find it!</p>
     </div>
     <form method="post">
-        <label for="file">File:</label>
-        <input type="text" id="file" name="file">
+        <input type="text" id="file" name="file" placeholder="File Path">
         <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
         <button class="real-button" type="submit">Read File</button>
     </form>
