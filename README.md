@@ -4,7 +4,7 @@ A containerized web application featuring various security challenges.
 
 ## Quick Start
 
-1. [WINDOWS] Install Docker Desktop [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+1. [WINDOWS] Install Docker Desktop [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)<br>
    [LINUX] Refere to [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)
 
 3. Open terminal/command prompt and run:
