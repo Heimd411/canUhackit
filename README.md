@@ -4,9 +4,10 @@ A containerized web application featuring various security challenges.
 
 ## Quick Start
 
-1. Install Docker Desktop from [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+1. [WINDOWS] Install Docker Desktop [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+   [LINUX] Refere to [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)
 
-2. Open terminal/command prompt and run:
+3. Open terminal/command prompt and run:
 ```bash
 # Pull and run the application
 git clone https://github.com/Heimd411/canUhackit.git
